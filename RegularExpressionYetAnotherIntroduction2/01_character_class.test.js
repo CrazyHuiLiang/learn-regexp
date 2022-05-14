@@ -163,7 +163,8 @@ describe('字符组运算', () => {
     PCRE字符组简记法可以脱离方括号直接出现，而POSIX字符组必须出现在方括号内。
  */
 describe('POSIX字符组', () => {
-    test('', () => {
-        expect(/^[]$/.test('')).toBeTruthy();
+    // js 不支持POSIX字符组
+    test('POSIX :digit:', () => {
+        expect(/^[[:digit:]]$/.test('8')).toBeTruthy();
     });
 });
