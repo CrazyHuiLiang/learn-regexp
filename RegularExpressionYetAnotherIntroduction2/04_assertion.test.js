@@ -97,4 +97,25 @@ describe('^ and $', () => {
     });
 });
 
-
+/*
+    环视：用来"停在原地，四处张望"。环视类似单词边界，在它旁边的文本需要满足某种条件，而且本身不匹配任何字符
+        (?=...)  肯定顺序环视的记法，表示?=右侧出现...
+        (?!...)  否定顺序环视的记法，表示?!右侧不能出现...
+        (?<=...) 肯定逆序环视的记法，表示?<=左侧出现...
+        (?<!...) 否定逆序环视的记法，表示?<!左侧不能出现...
+ */
+describe('look-around', () => {
+    // open tag
+    /*
+        <(?!/)    ('[^']*'"[^"]*"[^'">])+    (?<!/)?>
+        <         tag content...                    >
+     */
+    test('open_tag', () => {
+        const openTagRegex = new RegExp(`^<(?!/)('[^']*'|"[^"]*"|[^'">])+(?<!/)>$`);
+        expect(openTagRegex.test(`<input name=txt value=">\">`)).toBeTruthy();
+        expect(openTagRegex.test(`<input name=txt value='>'>`)).toBeTruthy();
+        expect(openTagRegex.test(`<u>`)).toBeTruthy();
+        expect(openTagRegex.test(`<br/>`)).toBeFalsy();
+        expect(openTagRegex.test(`<img src="url" />`)).toBeFalsy();
+    });
+});

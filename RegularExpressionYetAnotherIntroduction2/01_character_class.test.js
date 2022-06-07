@@ -139,10 +139,10 @@ describe('字符组简记法', () => {
     });
 });
 
-// js 不支持
+// js 不支持 字符组运算
 describe('字符组运算', () => {
     test('辅音字母', () => {
-        expect(/^[[a-z]&&[^aeiou]]$/.test('m')).toBeTruthy();
+        // expect(/^[[a-z]&&[^aeiou]]$/.test('m')).toBeTruthy();
     });
 });
 
@@ -165,6 +165,6 @@ describe('字符组运算', () => {
 describe('POSIX字符组', () => {
     // js 不支持POSIX字符组
     test('POSIX :digit:', () => {
-        expect(/^[[:digit:]]$/.test('8')).toBeTruthy();
+        // expect(/^[[:digit:]]$/.test('8')).toBeTruthy();
     });
 });

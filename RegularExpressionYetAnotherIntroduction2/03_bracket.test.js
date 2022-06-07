@@ -155,7 +155,7 @@ describe("capturing group", () => {
     test('date', () => {
         let regExp = /(\d{4})-(\d{2})-(\d{2})/;
         const matcher = regExp.exec('2022-05-16');
-        console.log(matcher);
+        // console.log(matcher);
         expect(matcher[1]).toBe('2022');
         expect(matcher[2]).toBe('05');
         expect(matcher[3]).toBe('16');
@@ -167,7 +167,7 @@ describe("capturing group", () => {
     test('nesting group', () => {
         let regExp = /(((\d{4})-(\d{2}))-(\d{2}))/;
         const matcher = regExp.exec('2022-05-16');
-        console.log(matcher);
+        // console.log(matcher);
         expect(matcher[1]).toBe('2022-05-16');
         expect(matcher[2]).toBe('2022-05');
         expect(matcher[3]).toBe('2022');
