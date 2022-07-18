@@ -57,12 +57,12 @@ describe('普通字符组', () => {
         expect(/^[-0-9]$/.test('-')).toBeTruthy();
         expect(/^[0-9\-]$/.test('-')).toBeTruthy();
 
-        // TODO 未测试出意义
-        // const regexp = new RegExp('[0-9\\-]');
-        // console.log(regexp)
-        // expect(regexp.test('-')).toBeTruthy();
+        // 在JavaScript中
+        expect(/[0-9-]/.test('-')).toBeTruthy(); // 表达式结尾处的-缺少表示范围的结束范围，所以不需要转义可以表示-
+        expect(/[0-9-z]/.test('-')).toBeTruthy(); // 表达式结尾处的-缺少表示范围的开始范围，所以不需要转义可以表示-
+        expect(/[0-9a-z]/.test('-')).toBeFalsy(); // 表达式表示为两个范围，不对-转义就无法匹配-
+        expect(/[0-9a\-z]/.test('-')).toBeTruthy(); // 对第二个-进行了转义，表达式表示 0-9 和 a 和 - 和 z
     });
-
 });
 
 /*
@@ -98,7 +98,7 @@ describe('排除型字符组', () => {
 });
 
 /*
-    长字符组简记法
+    字符组简记法
     \d  数字，等价[0-9]
     \w  单词字符，等价[0-9a-zA-Z_]， \w 还能匹配下划线需要尤其注意
     \s  空白字符，等价[\t\r\n\v\f]
