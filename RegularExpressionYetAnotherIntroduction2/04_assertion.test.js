@@ -118,4 +118,44 @@ describe('look-around', () => {
         expect(openTagRegex.test(`<br/>`)).toBeFalsy();
         expect(openTagRegex.test(`<img src="url" />`)).toBeFalsy();
     });
+
+
+    /*
+        环视的价值
+        * 添加限制不影响整个表达式的匹配
+        * 提取数据时杜绝错误匹配，一般来说，凡是从文本中提取"有长度特征的数据"，都要用到环视
+     */
+
+    // 辅音字母
+    test('consonant', () => {
+        expect(/[b-df-hj-np-tv-z]/.test('bcd')).toBeTruthy();
+        // 使用环视更加清晰：从26个字母中减去5个元音字母
+        //    [a-z]真正匹配一个小写字母
+        //    环视(?![aeiou])同时要求这个字母不能有 [aeiou] 匹配
+        expect(/(?![aeiou])[a-z]/.test('bcd')).toBeTruthy();
+    });
+
+    /*
+        环视与分组编号
+    */
+    test('look-around with bracket', () => {
+        // 环视结构虽然必须用到括号字符，但这里的括号只是结构需要，并不影响捕获分组
+        console.log(/(?!ab)(cd)/.exec('abcd'));
+        expect(/(?!ab)(cd)/.exec('abcd')[0]).toBe('cd');
+        expect(/(?!ab)(cd)/.exec('abcd')[1]).toBe('cd');
+
+        // 括号有多种用途，比如多选结构，即便括号只表示多选结构，如果没有显式指定为非捕获型括号(?:...),也会被视为捕获型括号，这时候结果就大不一样了
+        console.log(/^(?=(ab|cd))/.exec('abcd'));
+        console.log(/^(?=(?:ab|cd))/.exec('abcd'));
+    });
+
+    /*
+        环视的组合
+
+        多个环视可以组合在一起，实现在同一位置的多重判断
+     */
+    // 最常见的组合是环视中包含环视
+    test('contain', () => {
+
+    });
 });
