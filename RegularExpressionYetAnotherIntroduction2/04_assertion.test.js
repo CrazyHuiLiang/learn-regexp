@@ -120,6 +120,43 @@ describe('look-around', () => {
     });
 
 
+    // 使用 ',' 分割3位一组的数字
+    test('split-with-comma', () => {
+        const numString = '123456789';
+        // 将肯定顺序环视替换为一个,
+        expect(numString.replace(/(?=(\d{3})+)/g, ',')).toBe(',1,2,3,4,5,6,789');
+        // 结合否定顺序环视,让(\d{3})+能匹配右侧的整个数字字符串，而不能只匹配其中的一个子串
+        expect(numString.replace(/(?=(\d{3})+(?!\d))/g, ',')).toBe(',123,456,789');
+        // 上面的正则在整个字符串最左边也添加了,
+        // 严格的说加入,的位置应该是：右侧的数字字符串长度是3的倍数，且左侧也是数字字符，所以还需要加上肯定逆序环视
+        expect(numString.replace(/(?<=\d)(?=(\d{3})+(?!\d))/g, ',')).toBe('123,456,789');
+    });
+
+    // 去除掉中英文混排文本中，多余的空白字符（中文之间的空白字符，英文单词之间保留空白字符）
+    test('remove unnecessary space', () => {
+        const mixedString = '中英文混排，some    English word,有多余的空 白字符';
+        console.log('[' + mixedString.replace(/(?<![a-zA-Z])\s+(?![a-zA-Z])/g, '') + ']');
+
+
+        const mixedString2 = '  中英文混排，some    English word,有多余的空 白字符  ';
+        // 否定环视要判断成功有两种情况：字符串中出现了字符，但这些字符不能由环视结构中的表达式匹配；或者字符串中不再有任何字符串，也就是说
+        // 这个位置是字符串的起始位置或者结束位置
+        console.log('[' + mixedString2.replace(/(?<![a-zA-Z])\s+(?![a-zA-Z])/g, '') + ']');
+        // 肯定环视要判断成功，字符串中必须有字符由环视结构中的表达式匹配
+        // 因此下方表达式没有办法去除掉字符串两端的空白符
+        console.log('[' + mixedString2.replace(/(?<=[^a-zA-Z])\s+(?=[^a-zA-Z])/g, '') + ']');
+    });
+
+    // 在email中准确的找到主机地址
+    test('find host in email', () => {
+        const regExp = /^(?=[-a-zA-Z\d.]{0,255}(?![-a-zA-Z\d.]))((?!-)[-a-zA-Z\d]{1,63}\.)*(?!-)[-a-zA-Z\d]{1,63}$/g;
+        expect(new RegExp(regExp).test('localhost')).toBeTruthy();
+        expect(new RegExp(regExp).test('example.com')).toBeTruthy();
+        expect(new RegExp(regExp).test('-example.com')).toBeFalsy();
+        expect(new RegExp(regExp).test(Array(64).fill('e').join('') + '.com')).toBeFalsy();
+        expect(new RegExp(regExp).test(Array(256).fill('e').join(''))).toBeFalsy();
+    })
+
     /*
         环视的价值
         * 添加限制不影响整个表达式的匹配
